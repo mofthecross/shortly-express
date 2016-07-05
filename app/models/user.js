@@ -12,12 +12,15 @@ var User = db.Model.extend({
   },
   initialize: function() {
     this.on('creating', function(model, attrs, options) {
-      bcrypt.hash(model.get('password'), null, null, function(err, hash) {
-        if (err) {
-          console.log(err);
-        } else {
+      return new Promise(function(resolve, reject) {
+        bcrypt.hash(model.get('password'), null, null, function(err, hash) {
+          if (err) {
+            reject(err);
+          }
           model.set('password', hash);
-        }
+          // console.log('saving hash to database ', model.get('username'), hash);
+          resolve(hash);
+        });
       });
     });
   }

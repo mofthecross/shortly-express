@@ -254,12 +254,15 @@ describe('', function() {
         db.knex('users')
           .where('username', '=', 'Svnh')
           .then(function(res) {
+            console.log(res, body);
             if (res[0] && res[0]['username']) {
               var user = res[0]['username'];
             }
+            console.log('is this happening', user);
             expect(user).to.equal('Svnh');
             done();
           }).catch(function(err) {
+            console.log(err);
             throw {
               type: 'DatabaseError',
               message: 'Failed to create test setup data'
@@ -294,8 +297,13 @@ describe('', function() {
       new User({
         'username': 'Phillip',
         'password': 'Phillip'
-      }).save().then(function() {
-        done();
+      }).fetch().then(function() {
+        Users.create({
+          'username': 'Phillip',
+          'password': 'Phillip'
+        }).then(function() {
+          done();
+        });
       });
     });
 

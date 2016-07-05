@@ -58,7 +58,6 @@ function(req, res) {
           console.log('Error reading URL heading: ', err);
           return res.sendStatus(404);
         }
-        console.log(req.headers.origin);
         Links.create({
           url: uri,
           title: title,
@@ -75,7 +74,60 @@ function(req, res) {
 /************************************************************/
 // Write your authentication routes here
 /************************************************************/
+app.post('/signup', function(req, res) {
+  console.log(req.body);
+  var userData = {
+    username: req.body.username,
+    password: req.body.password
+  };
 
+  new User(userData).fetch()
+  .then(function(found) {
+    if (found) {
+      res.sendStatus(500);
+    } else {
+      Users.create(userData).then(function() {
+        res.setHeader('Location', '/');
+        console.log('Sending userData ', userData);
+        res.status(201).send(userData);
+      });
+    }
+  });
+
+});
+
+app.post('/login', function(req, res) {
+  var userData = {
+    username: req.body.username,
+    password: req.body.password
+  };
+
+
+  db.knex('users')
+    .where('username', '=', userData.username)
+    .then(function(dbArray) {
+      util.comparePassword(userData.password, dbArray[0].password, function(success) {
+        if (success) {
+          res.setHeader('Location', '/');
+          res.sendStatus(201);
+        }
+      });
+    });
+
+
+  // new User(userData).fetch()
+  // .then(function(found) {
+  //   if (!found) {
+  //     console.log(this.get('password'));
+  //     res.sendStatus(401);
+  //   } else {
+  //     console.log('login authorized, sending headers');
+  //     res.setHeader('Location', '/');
+  //     res.sendStatus(201);
+  //   }
+  // });
+
+});
 
 
 /************************************************************/
