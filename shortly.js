@@ -40,6 +40,11 @@ function(req, res) {
   });
 });
 
+// app.get('/login',
+//   function(req, res) {
+//     res.render('login');
+//   });
+
 app.post('/links', 
 function(req, res) {
   var uri = req.body.url;
@@ -89,11 +94,10 @@ app.post('/signup', function(req, res) {
       Users.create(userData).then(function() {
         res.setHeader('Location', '/');
         console.log('Sending userData ', userData);
-        res.status(201).send(userData);
+        res.sendStatus(201);
       });
     }
   });
-
 });
 
 app.post('/login', function(req, res) {
