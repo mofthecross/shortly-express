@@ -106,12 +106,23 @@ app.post('/login', function(req, res) {
   db.knex('users')
     .where('username', '=', userData.username)
     .then(function(dbArray) {
-      util.comparePassword(userData.password, dbArray[0].password, function(success) {
-        if (success) {
-          res.setHeader('Location', '/');
-          res.sendStatus(201);
-        }
-      });
+      if (dbArray.length === 0) {
+        res.setHeader('Location', '/login');
+        res.sendStatus(401);
+
+      } else {
+        util.comparePassword(userData.password, dbArray[0].password, function(success) {
+          if (success) {
+            res.setHeader('Location', '/');
+            res.sendStatus(201);
+          } else {
+            res.setHeader('Location', '/login');
+            res.sendStatus(401);
+          }
+        });
+        
+      }
+
     });
 
 
