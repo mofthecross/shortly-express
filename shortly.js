@@ -81,17 +81,14 @@ function(req, res) {
 /************************************************************/
 app.post('/signup', function(req, res) {
   console.log(req.body);
-  var userData = {
-    username: req.body.username,
-    password: req.body.password
-  };
 
-  new User(userData).fetch()
+  new User({username: req.body.username}).fetch()
   .then(function(found) {
     if (found) {
-      res.sendStatus(500);
+      res.setHeader('Content-Type', 'text/html');
+      res.status(401).send('<img src="https://s-media-cache-ak0.pinimg.com/564x/20/c9/58/20c95896b7650d44ad5bbfbe5d54d60d.jpg"></img>');
     } else {
-      Users.create(userData).then(function() {
+      Users.create({username: req.body.username, password: req.body.password}).then(function() {
         res.setHeader('Location', '/');
         console.log('Sending userData ', userData);
         res.sendStatus(201);
