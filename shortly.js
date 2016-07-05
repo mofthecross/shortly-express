@@ -58,7 +58,7 @@ function(req, res) {
           console.log('Error reading URL heading: ', err);
           return res.sendStatus(404);
         }
-
+        console.log(req.headers.origin);
         Links.create({
           url: uri,
           title: title,
