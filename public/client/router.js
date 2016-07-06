@@ -10,6 +10,10 @@ Shortly.Router = Backbone.Router.extend({
     'signup': 'signup'
   },
 
+  defaults: {
+    loggedIn: false
+  },
+
   swapView: function(view) {
     this.$el.html(view.render().el);
   },
